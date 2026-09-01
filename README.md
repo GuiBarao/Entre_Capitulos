@@ -1,20 +1,57 @@
-<<<<<<< HEAD
-# React + Vite
+# Entre Capítulos — Front-end
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Interface web (React + Vite) para a rede social de leitores **Entre Capítulos**.
+Consome a API REST do projeto [`EntreCapitulos`](../EntreCapitulos).
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **Vite**
+- **react-router-dom 7** para as rotas
+- `fetch` encapsulado em `src/api/` (sem dependências extras de HTTP)
+- CSS puro com design tokens em `src/index.css`
 
-## React Compiler
+## Pré-requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- A API `EntreCapitulos` rodando em `http://localhost:3000`
+  (com o MongoDB ativo). Veja o README da API.
 
-## Expanding the Oxlint configuration
+## Rodando
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
-=======
-# Entre_Capitulos
->>>>>>> 0273bf2f90bf998af22ff7774a2079b559dfa5fd
+```bash
+npm install
+npm run dev
+```
+
+O Vite sobe em `http://localhost:5173`. As chamadas para `/api/*` são
+encaminhadas por proxy para `http://localhost:3000` (configurado em
+`vite.config.js`), evitando problemas de CORS em desenvolvimento.
+
+## Scripts
+
+| Comando           | Descrição                        |
+| ----------------- | -------------------------------- |
+| `npm run dev`     | Servidor de desenvolvimento      |
+| `npm run build`   | Build de produção em `dist/`     |
+| `npm run preview` | Pré-visualiza o build            |
+| `npm run lint`    | Lint com oxlint                  |
+
+## Estrutura
+
+```
+src/
+  api/         Cliente HTTP e wrappers dos endpoints da API
+  components/  Componentes reutilizáveis
+  context/     Contexto de autenticação (token JWT + usuário logado)
+  layouts/     Shells de página (área autenticada e telas de acesso)
+  pages/       Telas
+  routes/      Guardas de rota (protegida / pública)
+  utils/       Utilitários (ex.: decode de JWT)
+```
+
+## Autenticação
+
+O login (`POST /usuarios/login`) devolve um token JWT que é guardado em
+`localStorage` (`ec_token`). O `AuthContext` decodifica o token para obter o
+id do usuário e carrega seus dados via `GET /usuarios/:id`. Rotas internas
+ficam atrás de `<ProtectedRoute>`.
