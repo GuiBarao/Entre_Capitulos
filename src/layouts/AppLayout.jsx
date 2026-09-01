@@ -1,65 +1,79 @@
+import { useMemo } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useEstanteUsuario } from '../hooks/useEstanteUsuario'
+import { Avatar } from '../components/Avatar'
+import { Icon } from '../components/Icon'
+import './app-layout.css'
 
-// Shell básico da área autenticada. O layout definitivo (sidebar do protótipo,
-// busca no topo, mini-perfil) será construído na sua própria tarefa.
-
-const navItens = [
-  { to: '/', rotulo: 'Início', end: true },
-  { to: '/explorar', rotulo: 'Explorar' },
-  { to: '/estante', rotulo: 'Minha Estante' },
-  { to: '/listas', rotulo: 'Minhas Listas' },
-  { to: '/perfil', rotulo: 'Meu Perfil' },
+const NAV = [
+  { to: '/', rotulo: 'Início', icone: 'home', end: true },
+  { to: '/explorar', rotulo: 'Explorar', icone: 'search' },
+  { to: '/estante', rotulo: 'Minha Estante', icone: 'book-open' },
+  { to: '/listas', rotulo: 'Minhas Listas', icone: 'list' },
+  { to: '/perfil', rotulo: 'Meu Perfil', icone: 'user' },
 ]
 
 export function AppLayout() {
   const { usuario, logout } = useAuth()
+  const { itens } = useEstanteUsuario(usuario?._id)
+
+  const lidos = useMemo(
+    () => itens.filter((e) => e.status === 'lido').length,
+    [itens],
+  )
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <aside
-        style={{
-          width: 'var(--sidebar-width)',
-          borderRight: '1px solid var(--border)',
-          padding: '20px 16px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
-          backgroundColor: 'var(--surface)',
-        }}
-      >
-        <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--wine)' }}>
-          Entre Capítulos
+    <div className="app">
+      <aside className="sidebar">
+        <div className="sidebar__logo">
+          <span className="sidebar__logo-1">Entre</span>
+          <span className="sidebar__logo-2">Capítulos</span>
         </div>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 16 }}>
-          {navItens.map((item) => (
+        <p className="sidebar__tagline">Sua jornada literária</p>
+
+        <hr className="sidebar__divider" />
+
+        <nav className="sidebar__nav">
+          {NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.end}
-              style={({ isActive }) => ({
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-sm)',
-                color: isActive ? 'var(--text-on-wine)' : 'var(--text)',
-                backgroundColor: isActive ? 'var(--wine)' : 'transparent',
-                textDecoration: 'none',
-              })}
+              className={({ isActive }) =>
+                `sidebar__link${isActive ? ' is-active' : ''}`
+              }
             >
+              <Icon name={item.icone} size={17} />
               {item.rotulo}
             </NavLink>
           ))}
         </nav>
-        <div style={{ marginTop: 'auto', fontSize: '0.9rem' }}>
-          <div style={{ color: 'var(--text-muted)' }}>{usuario?.nome}</div>
-          <button type="button" className="btn btn--ghost" style={{ marginTop: 8 }} onClick={logout}>
-            Sair
-          </button>
-        </div>
+
+        <div className="sidebar__spacer" />
+
+        <NavLink to="/perfil" className="sidebar__user">
+          <Avatar usuario={usuario} size={40} />
+          <span>
+            <span className="sidebar__user-name">{usuario?.nome || 'Meu perfil'}</span>
+            <br />
+            <span className="sidebar__user-meta">
+              {lidos} {lidos === 1 ? 'livro lido' : 'livros lidos'}
+            </span>
+          </span>
+        </NavLink>
+
+        <button type="button" className="btn btn--ghost sidebar__logout" onClick={logout}>
+          <Icon name="log-out" size={16} />
+          Sair
+        </button>
       </aside>
 
-      <main style={{ flex: 1, padding: '28px 36px', maxWidth: 980 }}>
-        <Outlet />
-      </main>
+      <div className="app__content">
+        <div className="app__content-inner">
+          <Outlet />
+        </div>
+      </div>
     </div>
   )
 }

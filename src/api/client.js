@@ -1,7 +1,9 @@
 // Cliente HTTP para a API do EntreCapitulos.
 // Em desenvolvimento o Vite faz proxy de /api -> http://localhost:3000 (ver vite.config.js).
 
-const BASE_URL = '/api'
+// Em desenvolvimento usamos o proxy do Vite (/api). Defina VITE_API_BASE
+// para apontar direto para a API (ex.: build servido separadamente).
+const BASE_URL = import.meta.env.VITE_API_BASE || '/api'
 const TOKEN_KEY = 'ec_token'
 
 export class ApiError extends Error {
