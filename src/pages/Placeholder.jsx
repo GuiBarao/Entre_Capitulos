@@ -37,11 +37,3 @@ export const PerfilPage = () => (
 export const LivroPage = () => (
   <Placeholder titulo="Livro" descricao="Detalhes do livro, resenhas e ações." />
 )
-
-export const EntrarPage = () => (
-  <Placeholder titulo="Bem-vindo de volta" descricao="Continue sua jornada literária" />
-)
-
-export const CadastroPage = () => (
-  <Placeholder titulo="Crie sua conta" descricao="Comece a registrar suas leituras" />
-)

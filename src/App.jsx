@@ -3,8 +3,6 @@ import { AppLayout } from './layouts/AppLayout'
 import { AuthLayout } from './layouts/AuthLayout'
 import { ProtectedRoute, PublicOnlyRoute } from './routes/ProtectedRoute'
 import {
-  CadastroPage,
-  EntrarPage,
   EstantePage,
   ExplorarPage,
   InicioPage,
@@ -12,6 +10,8 @@ import {
   LivroPage,
   PerfilPage,
 } from './pages/Placeholder'
+import { EntrarPage } from './pages/Entrar'
+import { CadastroPage } from './pages/Cadastro'
 import { NaoEncontradaPage } from './pages/NaoEncontrada'
 
 function App() {
