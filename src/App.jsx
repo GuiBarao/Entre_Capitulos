@@ -5,11 +5,11 @@ import { ProtectedRoute, PublicOnlyRoute } from './routes/ProtectedRoute'
 import {
   EstantePage,
   ExplorarPage,
-  InicioPage,
   ListasPage,
   LivroPage,
   PerfilPage,
 } from './pages/Placeholder'
+import { InicioPage } from './pages/Inicio'
 import { EntrarPage } from './pages/Entrar'
 import { CadastroPage } from './pages/Cadastro'
 import { NaoEncontradaPage } from './pages/NaoEncontrada'

@@ -11,13 +11,6 @@ function Placeholder({ titulo, descricao }) {
   )
 }
 
-export const InicioPage = () => (
-  <Placeholder
-    titulo="Início"
-    descricao="Acompanhe leituras, resenhas e listas da sua comunidade."
-  />
-)
-
 export const ExplorarPage = () => (
   <Placeholder titulo="Explorar" descricao="Descubra novos livros, autores e leitores." />
 )

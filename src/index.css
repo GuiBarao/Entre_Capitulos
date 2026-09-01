@@ -233,6 +233,113 @@ button {
   }
 }
 
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background-color: var(--surface);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-bar__input::placeholder {
+  color: var(--text-soft);
+}
+
+.search-bar__input:focus {
+  outline: none;
+  border-color: var(--wine-soft);
+  box-shadow: 0 0 0 3px var(--wine-tint);
+}
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--border-strong);
+  line-height: 0;
+}
+
+.stars__star.is-on {
+  color: var(--star);
+}
+
+.stars--input {
+  gap: 4px;
+}
+
+.stars__btn {
+  color: var(--border-strong);
+  padding: 2px;
+  line-height: 0;
+  transition: color 0.12s ease, transform 0.12s ease;
+}
+
+.stars__btn:hover {
+  transform: scale(1.12);
+}
+
+.stars__btn.is-on {
+  color: var(--star);
+}
+
+.book-cover {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(43, 38, 38, 0.18);
+  background-color: var(--wine);
+}
+
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-cover--gen {
+  padding: 8px 7px;
+  color: #fff;
+  border-left: 3px solid rgba(255, 255, 255, 0.28);
+  line-height: 1.15;
+}
+
+.book-cover__title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.book-cover__author {
+  font-size: 0.82em;
+  opacity: 0.75;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .avatar {
   display: inline-grid;
   place-items: center;

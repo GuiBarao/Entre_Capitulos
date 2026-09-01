@@ -24,6 +24,26 @@ export function rotuloStatus(status) {
 
 export const STATUS_ESTANTE = ['lendo', 'quero_ler', 'lido', 'abandonado']
 
+const DIACRITICOS = /[̀-ͯ]/g
+
+export function semAcento(texto = '') {
+  return texto.normalize('NFD').replace(DIACRITICOS, '')
+}
+
+export function handleUsuario(usuario) {
+  if (!usuario) return 'usuario'
+  if (usuario.email && usuario.email.includes('@')) {
+    return usuario.email
+      .split('@')[0]
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]/g, '')
+  }
+  return semAcento(usuario.nome || 'usuario')
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[^a-z0-9._-]/g, '')
+}
+
 export function iniciais(nome = '') {
   const partes = nome.trim().split(/\s+/).filter(Boolean)
   if (partes.length === 0) return '?'
@@ -53,9 +73,17 @@ export function mesAno(data) {
   return `${MESES[d.getMonth()]} de ${d.getFullYear()}`
 }
 
+export function dataCurta(data) {
+  if (!data) return ''
+  const d = new Date(data)
+  if (Number.isNaN(d.getTime())) return ''
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
 export function tempoRelativo(data) {
   if (!data) return ''
   const d = new Date(data)
+  if (Number.isNaN(d.getTime())) return ''
   const diff = Date.now() - d.getTime()
   const min = Math.floor(diff / 60000)
   if (min < 1) return 'agora'
