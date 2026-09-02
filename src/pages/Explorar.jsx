@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useCatalogo } from '../hooks/useCatalogo'
+import { useListas } from '../hooks/useListas'
 import { SearchBar } from '../components/SearchBar'
 import { BookListItem } from '../components/BookListItem'
 import { BookCover } from '../components/BookCover'
 import { Stars } from '../components/Stars'
 import { Icon } from '../components/Icon'
+import { ListaCard } from '../components/ListaCard'
 import { Link } from 'react-router-dom'
 import { idDe, semAcento } from '../utils/dados'
 import './explorar.css'
@@ -37,6 +39,7 @@ function combina(livro, termo) {
 export function ExplorarPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { livros, carregando, erro } = useCatalogo()
+  const { listas } = useListas()
 
   const [busca, setBusca] = useState(searchParams.get('q') || '')
   const [categoria, setCategoria] = useState('Todos')
@@ -67,6 +70,15 @@ export function ExplorarPage() {
         .slice(0, 5),
     [livros],
   )
+
+  const listasEncontradas = useMemo(() => {
+    const termo = normaliza(busca.trim())
+    if (!termo) return []
+    return listas
+      .filter((l) => l.publica !== false)
+      .filter((l) => normaliza(`${l.nome} ${l.descricao || ''}`).includes(termo))
+      .slice(0, 6)
+  }, [listas, busca])
 
   function verTodos() {
     catalogoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -117,6 +129,23 @@ export function ExplorarPage() {
 
       {!carregando && !erro && (
         <>
+          {busca.trim() && listasEncontradas.length > 0 && (
+            <section className="explorar__section">
+              <header className="explorar__section-head">
+                <h2>Listas</h2>
+                <span className="explorar__contagem">
+                  {listasEncontradas.length}{' '}
+                  {listasEncontradas.length === 1 ? 'lista' : 'listas'}
+                </span>
+              </header>
+              <div className="explorar__lista">
+                {listasEncontradas.map((l) => (
+                  <ListaCard key={idDe(l)} lista={l} />
+                ))}
+              </div>
+            </section>
+          )}
+
           {melhores.length > 0 && !busca && categoria === 'Todos' && (
             <section className="explorar__section">
               <header className="explorar__section-head">
