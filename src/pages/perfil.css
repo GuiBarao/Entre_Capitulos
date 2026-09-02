@@ -1,0 +1,191 @@
+.perfil__estado {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+  color: var(--text-muted);
+}
+
+.perfil__card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 24px 26px;
+}
+
+.perfil__topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.perfil__editar {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.perfil__nome {
+  font-size: 1.7rem;
+  margin-top: 14px;
+}
+
+.perfil__bio {
+  color: var(--text);
+  margin-top: 8px;
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.perfil__cidade {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  margin-top: 10px;
+}
+
+.perfil__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.perfil__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.perfil__stat-num {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.perfil__stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+
+.perfil__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 26px;
+  margin-top: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.perfil-tab {
+  padding: 10px 2px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.perfil-tab:hover {
+  color: var(--text);
+}
+
+.perfil-tab.is-active {
+  color: var(--text);
+  font-weight: 600;
+  border-bottom-color: var(--wine);
+}
+
+/* Conteúdo */
+
+.perfil__conteudo {
+  margin-top: 22px;
+}
+
+.perfil__vazio {
+  color: var(--text-muted);
+  padding: 24px 0;
+}
+
+.perfil__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.perfil__grupo + .perfil__grupo {
+  margin-top: 26px;
+}
+
+.perfil__grupo-titulo {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.perfil__grupo-titulo span {
+  color: var(--text-soft);
+  font-weight: 400;
+}
+
+.perfil__capas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 14px;
+}
+
+.perfil__capa {
+  align-self: start;
+}
+
+.perfil__capa:hover {
+  text-decoration: none;
+}
+
+.perfil__capa .book-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  transition: transform 0.14s ease;
+}
+
+.perfil__capa:hover .book-cover {
+  transform: translateY(-3px);
+}
+
+/* Form de perfil (dentro do modal) */
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.perfil-form__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.perfil-form__actions {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .perfil__capas {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .perfil__stats {
+    gap: 20px;
+  }
+}

@@ -16,7 +16,7 @@ function tempo(data) {
   return Number.isNaN(t) ? 0 : t
 }
 
-export function useFeed({ limite = 30 } = {}) {
+export function useFeed({ limite = 30, usuarioId = null } = {}) {
   const [itens, setItens] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
@@ -95,8 +95,12 @@ export function useFeed({ limite = 30 } = {}) {
           })
         }
 
-        atividades.sort((a, b) => tempo(b.data) - tempo(a.data))
-        setItens(atividades.slice(0, limite))
+        const filtradas = usuarioId
+          ? atividades.filter((a) => idDe(a.usuario) === usuarioId)
+          : atividades
+
+        filtradas.sort((a, b) => tempo(b.data) - tempo(a.data))
+        setItens(filtradas.slice(0, limite))
       })
       .catch((err) => {
         if (err.name !== 'AbortError') setErro(err)
@@ -104,7 +108,7 @@ export function useFeed({ limite = 30 } = {}) {
       .finally(() => setCarregando(false))
 
     return () => controller.abort()
-  }, [limite])
+  }, [limite, usuarioId])
 
   return { itens, carregando, erro }
 }
