@@ -3,7 +3,34 @@
 }
 
 .inicio__header {
+  margin-bottom: 14px;
+}
+
+.inicio__escopo {
+  display: flex;
+  gap: 6px;
   margin-bottom: 20px;
+}
+
+.inicio__escopo-btn {
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background-color: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+  transition: background-color 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+}
+
+.inicio__escopo-btn:hover {
+  color: var(--text);
+}
+
+.inicio__escopo-btn.is-active {
+  background-color: var(--wine);
+  border-color: var(--wine);
+  color: var(--text-on-wine);
 }
 
 .inicio__estado {

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useLivro } from '../hooks/useLivro'
 import { resenhas as resenhasApi } from '../api/resources'
+import { registrarAtividade, descricaoAtividade } from '../api/atividades'
 import { BookCover } from '../components/BookCover'
 import { Stars } from '../components/Stars'
 import { Icon } from '../components/Icon'
@@ -48,6 +49,7 @@ export function LivroPage() {
       await resenhasApi.atualizar(minhaResenha._id, dados)
     } else {
       await resenhasApi.criar({ ...dados, usuario_id: usuarioId, livro_id: id })
+      registrarAtividade(usuarioId, 'resenha', descricaoAtividade.resenha(livro.titulo))
     }
     setEditandoResenha(false)
     await recarregar()
@@ -98,6 +100,7 @@ export function LivroPage() {
           {usuarioId && (
             <EstanteControls
               livroId={id}
+              livroTitulo={livro.titulo}
               usuarioId={usuarioId}
               registro={minhaEstante}
               onMudou={recarregar}

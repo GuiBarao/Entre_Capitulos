@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { usePerfil } from '../hooks/usePerfil'
 import { useFeed } from '../hooks/useFeed'
 import { seguidores as seguidoresApi } from '../api/resources'
+import { registrarAtividade, descricaoAtividade } from '../api/atividades'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { BookCover } from '../components/BookCover'
@@ -91,6 +92,7 @@ export function PerfilPage() {
         await seguidoresApi.excluir(meuRegistroSeguir._id)
       } else {
         await seguidoresApi.criar({ seguidor_id: eu._id, seguido_id: perfilId })
+        registrarAtividade(eu._id, 'seguir', descricaoAtividade.seguir(usuario.nome))
       }
       await recarregar()
     } finally {

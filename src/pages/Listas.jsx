@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useListas } from '../hooks/useListas'
 import { listas as listasApi } from '../api/resources'
+import { registrarAtividade, descricaoAtividade } from '../api/atividades'
 import { Icon } from '../components/Icon'
 import { Modal } from '../components/Modal'
 import { ListaForm } from '../components/ListaForm'
@@ -18,6 +19,7 @@ export function ListasPage() {
 
   async function criar(dados) {
     const nova = await listasApi.criar({ ...dados, usuario_id: usuario._id })
+    registrarAtividade(usuario._id, 'lista', descricaoAtividade.lista(dados.nome))
     setModalAberto(false)
     await recarregar()
     if (nova?._id) navigate(`/listas/${nova._id}`)

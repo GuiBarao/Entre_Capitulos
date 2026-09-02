@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { estantes as estantesApi } from '../api/resources'
+import { registrarAtividade, descricaoAtividade } from '../api/atividades'
 import { Icon } from './Icon'
 import { STATUS_ESTANTE, rotuloStatus } from '../utils/dados'
 
 // Controles para adicionar/atualizar o livro na estante do usuário logado.
-export function EstanteControls({ livroId, usuarioId, registro, onMudou }) {
+export function EstanteControls({ livroId, livroTitulo, usuarioId, registro, onMudou }) {
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState('')
   const [progresso, setProgresso] = useState(registro?.progresso ?? 0)
@@ -32,6 +33,13 @@ export function EstanteControls({ livroId, usuarioId, registro, onMudou }) {
         }
         await estantesApi.atualizar(registro._id, patch)
       }
+
+      const mudouStatus = !registro || registro.status !== status
+      if (mudouStatus && livroTitulo && (status === 'lendo' || status === 'lido')) {
+        const tipo = status === 'lendo' ? 'inicio_leitura' : 'fim_leitura'
+        registrarAtividade(usuarioId, tipo, descricaoAtividade[tipo](livroTitulo))
+      }
+
       await onMudou?.()
     } catch (err) {
       setErro(err.message || 'Não foi possível atualizar a estante.')
@@ -66,6 +74,13 @@ export function EstanteControls({ livroId, usuarioId, registro, onMudou }) {
         patch.data_conclusao = new Date().toISOString()
       }
       await estantesApi.atualizar(registro._id, patch)
+      if (valor >= 100 && registro.status !== 'lido' && livroTitulo) {
+        registrarAtividade(
+          usuarioId,
+          'fim_leitura',
+          descricaoAtividade.fim_leitura(livroTitulo),
+        )
+      }
       await onMudou?.()
     } catch (err) {
       setErro(err.message || 'Não foi possível salvar o progresso.')

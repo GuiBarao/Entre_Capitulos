@@ -1,17 +1,35 @@
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { useFeed } from '../hooks/useFeed'
+import { useIdsSeguidos } from '../hooks/useIdsSeguidos'
 import { SearchBar } from '../components/SearchBar'
 import { FeedItem } from '../components/FeedItem'
+import { idDe } from '../utils/dados'
 import './inicio.css'
 
 export function InicioPage() {
   const navigate = useNavigate()
-  const { itens, carregando, erro } = useFeed({ limite: 30 })
+  const { usuario } = useAuth()
+  const { itens, carregando, erro } = useFeed({ limite: 40 })
+  const { ids: seguidos } = useIdsSeguidos(usuario?._id)
+
+  const [escopo, setEscopo] = useState('seguindo') // 'seguindo' | 'todos'
 
   function buscar(q) {
     if (q) navigate(`/explorar?q=${encodeURIComponent(q)}`)
     else navigate('/explorar')
   }
+
+  const visiveis = useMemo(() => {
+    if (escopo === 'todos') return itens.slice(0, 30)
+    return itens
+      .filter((i) => {
+        const uid = idDe(i.usuario)
+        return uid === usuario?._id || seguidos.has(uid)
+      })
+      .slice(0, 30)
+  }, [itens, escopo, seguidos, usuario])
 
   return (
     <div className="inicio">
@@ -28,6 +46,27 @@ export function InicioPage() {
         </p>
       </header>
 
+      <div className="inicio__escopo" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={escopo === 'seguindo'}
+          className={`inicio__escopo-btn${escopo === 'seguindo' ? ' is-active' : ''}`}
+          onClick={() => setEscopo('seguindo')}
+        >
+          Seguindo
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={escopo === 'todos'}
+          className={`inicio__escopo-btn${escopo === 'todos' ? ' is-active' : ''}`}
+          onClick={() => setEscopo('todos')}
+        >
+          Todos
+        </button>
+      </div>
+
       {carregando && (
         <div className="inicio__estado">
           <div className="spinner" />
@@ -40,15 +79,17 @@ export function InicioPage() {
         </p>
       )}
 
-      {!carregando && !erro && itens.length === 0 && (
+      {!carregando && !erro && visiveis.length === 0 && (
         <p className="inicio__estado">
-          Ainda não há atividade por aqui. Comece adicionando livros à sua estante.
+          {escopo === 'seguindo'
+            ? 'As pessoas que você segue ainda não têm atividade. Veja "Todos" ou descubra leitores no Explorar.'
+            : 'Ainda não há atividade por aqui. Comece adicionando livros à sua estante.'}
         </p>
       )}
 
-      {!carregando && !erro && itens.length > 0 && (
+      {!carregando && !erro && visiveis.length > 0 && (
         <ul className="feed">
-          {itens.map((item) => (
+          {visiveis.map((item) => (
             <li key={item.id}>
               <FeedItem item={item} />
             </li>
