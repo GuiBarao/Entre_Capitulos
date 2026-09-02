@@ -2,14 +2,9 @@ import { Route, Routes } from 'react-router-dom'
 import { AppLayout } from './layouts/AppLayout'
 import { AuthLayout } from './layouts/AuthLayout'
 import { ProtectedRoute, PublicOnlyRoute } from './routes/ProtectedRoute'
-import {
-  EstantePage,
-  ExplorarPage,
-  ListasPage,
-  LivroPage,
-  PerfilPage,
-} from './pages/Placeholder'
+import { EstantePage, ListasPage, LivroPage, PerfilPage } from './pages/Placeholder'
 import { InicioPage } from './pages/Inicio'
+import { ExplorarPage } from './pages/Explorar'
 import { EntrarPage } from './pages/Entrar'
 import { CadastroPage } from './pages/Cadastro'
 import { NaoEncontradaPage } from './pages/NaoEncontrada'
