@@ -203,6 +203,29 @@
   gap: 10px;
 }
 
+.perfil-form__danger {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.perfil-form__danger-link {
+  color: var(--danger);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.perfil-form__danger-link:hover {
+  text-decoration: underline;
+}
+
+.perfil-form__danger-aviso {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  line-height: 1.55;
+}
+
 @media (max-width: 480px) {
   .perfil__capas {
     grid-template-columns: repeat(3, 1fr);

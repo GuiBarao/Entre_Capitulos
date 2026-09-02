@@ -79,6 +79,11 @@ export function AuthProvider({ children }) {
     [usuarioId],
   )
 
+  const excluirConta = useCallback(async () => {
+    await usuariosApi.excluir(usuarioId)
+    logout()
+  }, [usuarioId, logout])
+
   const value = useMemo(
     () => ({
       token,
@@ -90,9 +95,20 @@ export function AuthProvider({ children }) {
       registrar,
       logout,
       atualizarUsuario,
+      excluirConta,
       setUsuario,
     }),
-    [token, usuario, usuarioId, carregando, login, registrar, logout, atualizarUsuario],
+    [
+      token,
+      usuario,
+      usuarioId,
+      carregando,
+      login,
+      registrar,
+      logout,
+      atualizarUsuario,
+      excluirConta,
+    ],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

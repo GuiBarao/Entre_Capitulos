@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 // Formulário de edição do perfil do usuário logado.
-export function EditarPerfilForm({ usuario, onSubmit, onCancelar }) {
+export function EditarPerfilForm({ usuario, onSubmit, onCancelar, onExcluir }) {
   const [nome, setNome] = useState(usuario?.nome ?? '')
   const [bio, setBio] = useState(usuario?.bio ?? '')
   const [cidade, setCidade] = useState(usuario?.cidade ?? '')
@@ -9,6 +9,8 @@ export function EditarPerfilForm({ usuario, onSubmit, onCancelar }) {
   const [privado, setPrivado] = useState(usuario?.privado ?? false)
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false)
+  const [excluindo, setExcluindo] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -28,6 +30,17 @@ export function EditarPerfilForm({ usuario, onSubmit, onCancelar }) {
       setErro(err.message || 'Não foi possível salvar o perfil.')
     } finally {
       setEnviando(false)
+    }
+  }
+
+  async function handleExcluir() {
+    setErro('')
+    setExcluindo(true)
+    try {
+      await onExcluir()
+    } catch (err) {
+      setErro(err.message || 'Não foi possível excluir a conta.')
+      setExcluindo(false)
     }
   }
 
@@ -98,6 +111,45 @@ export function EditarPerfilForm({ usuario, onSubmit, onCancelar }) {
           </button>
         )}
       </div>
+
+      {onExcluir && (
+        <div className="perfil-form__danger">
+          {!confirmandoExclusao ? (
+            <button
+              type="button"
+              className="perfil-form__danger-link"
+              onClick={() => setConfirmandoExclusao(true)}
+            >
+              Excluir minha conta
+            </button>
+          ) : (
+            <>
+              <p className="perfil-form__danger-aviso">
+                Isso remove sua conta permanentemente. Suas resenhas, listas e estante
+                não poderão mais ser editadas. Tem certeza?
+              </p>
+              <div className="perfil-form__actions">
+                <button
+                  type="button"
+                  className="btn btn--danger"
+                  onClick={handleExcluir}
+                  disabled={excluindo}
+                >
+                  {excluindo ? 'Excluindo...' : 'Sim, excluir conta'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn--ghost"
+                  onClick={() => setConfirmandoExclusao(false)}
+                  disabled={excluindo}
+                >
+                  Manter conta
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </form>
   )
 }

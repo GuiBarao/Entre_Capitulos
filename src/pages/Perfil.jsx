@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { usePerfil } from '../hooks/usePerfil'
 import { useFeed } from '../hooks/useFeed'
@@ -21,7 +21,8 @@ const ABAS = ['Estante', 'Resenhas', 'Listas', 'Atividade']
 
 export function PerfilPage() {
   const { id } = useParams()
-  const { usuario: eu, atualizarUsuario } = useAuth()
+  const navigate = useNavigate()
+  const { usuario: eu, atualizarUsuario, excluirConta } = useAuth()
   const perfilId = id || eu?._id
   const ehMeuPerfil = !!eu && perfilId === eu._id
 
@@ -82,6 +83,11 @@ export function PerfilPage() {
     await atualizarUsuario(dados)
     setEditando(false)
     await recarregar()
+  }
+
+  async function excluirMinhaConta() {
+    await excluirConta()
+    navigate('/entrar', { replace: true })
   }
 
   async function alternarSeguir() {
@@ -267,6 +273,7 @@ export function PerfilPage() {
           usuario={usuario}
           onSubmit={salvarPerfil}
           onCancelar={() => setEditando(false)}
+          onExcluir={excluirMinhaConta}
         />
       </Modal>
 

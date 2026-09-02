@@ -162,6 +162,20 @@ button {
   background-color: var(--surface-alt);
 }
 
+.btn--danger {
+  background-color: var(--danger);
+  color: #fff;
+}
+
+.btn--danger:hover {
+  background-color: #a5321f;
+}
+
+.btn--danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn--block {
   width: 100%;
 }
