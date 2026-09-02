@@ -1,0 +1,123 @@
+.livro__estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 60px 0;
+  color: var(--text-muted);
+}
+
+.livro__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 18px;
+}
+
+.livro__voltar:hover {
+  color: var(--wine);
+}
+
+.livro__header {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.livro__cover {
+  flex-shrink: 0;
+}
+
+.livro__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.livro__titulo {
+  font-size: 1.9rem;
+  line-height: 1.15;
+}
+
+.livro__autores {
+  color: var(--wine);
+  font-size: 1rem;
+  margin-top: 4px;
+}
+
+.livro__detalhes,
+.livro__isbn {
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  margin-top: 4px;
+}
+
+.livro__avaliacao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.livro__avaliacao strong {
+  color: var(--text);
+}
+
+.livro__sem-nota {
+  color: var(--text-soft);
+}
+
+.livro__secao {
+  margin-top: 34px;
+}
+
+.livro__secao > h2 {
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+}
+
+.livro__secao > h2 span {
+  color: var(--text-soft);
+  font-weight: 400;
+}
+
+.livro__sinopse {
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.livro__aviso {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.livro__resenhas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.livro__link-acao {
+  color: var(--wine);
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+
+.livro__link-acao--danger {
+  color: var(--danger);
+}
+
+@media (max-width: 640px) {
+  .livro__header {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .livro__cover {
+    align-self: center;
+  }
+}

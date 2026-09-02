@@ -22,7 +22,3 @@ export const ListasPage = () => (
 export const PerfilPage = () => (
   <Placeholder titulo="Meu Perfil" descricao="Suas informações, resenhas e atividade." />
 )
-
-export const LivroPage = () => (
-  <Placeholder titulo="Livro" descricao="Detalhes do livro, resenhas e ações." />
-)

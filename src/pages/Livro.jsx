@@ -1,0 +1,171 @@
+import { useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { useLivro } from '../hooks/useLivro'
+import { resenhas as resenhasApi } from '../api/resources'
+import { BookCover } from '../components/BookCover'
+import { Stars } from '../components/Stars'
+import { Icon } from '../components/Icon'
+import { EstanteControls } from '../components/EstanteControls'
+import { ReviewForm } from '../components/ReviewForm'
+import { ReviewCard } from '../components/ReviewCard'
+import { idDe } from '../utils/dados'
+import './livro.css'
+
+export function LivroPage() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { usuario } = useAuth()
+  const usuarioId = usuario?._id
+  const { livro, resenhas, media, minhaEstante, minhaResenha, carregando, erro, recarregar } =
+    useLivro(id, usuarioId)
+
+  const [editandoResenha, setEditandoResenha] = useState(false)
+
+  if (carregando) {
+    return (
+      <div className="livro__estado">
+        <div className="spinner" />
+      </div>
+    )
+  }
+
+  if (erro || !livro) {
+    return (
+      <div className="livro__estado">
+        <p>{erro?.status === 404 ? 'Livro não encontrado.' : erro?.message || 'Erro ao carregar.'}</p>
+        <button type="button" className="btn btn--ghost" onClick={() => navigate(-1)}>
+          Voltar
+        </button>
+      </div>
+    )
+  }
+
+  const outrasResenhas = resenhas.filter((r) => idDe(r.usuario_id) !== usuarioId)
+
+  async function salvarResenha(dados) {
+    if (minhaResenha) {
+      await resenhasApi.atualizar(minhaResenha._id, dados)
+    } else {
+      await resenhasApi.criar({ ...dados, usuario_id: usuarioId, livro_id: id })
+    }
+    setEditandoResenha(false)
+    await recarregar()
+  }
+
+  async function excluirResenha() {
+    if (!minhaResenha) return
+    await resenhasApi.excluir(minhaResenha._id)
+    await recarregar()
+  }
+
+  const detalhes = [livro.editora, livro.ano, livro.paginas && `${livro.paginas} páginas`]
+    .filter(Boolean)
+    .join(' • ')
+
+  return (
+    <div className="livro">
+      <button type="button" className="livro__voltar" onClick={() => navigate(-1)}>
+        <Icon name="chevron-left" size={16} />
+        Voltar
+      </button>
+
+      <header className="livro__header">
+        <BookCover livro={livro} size="lg" className="livro__cover" />
+
+        <div className="livro__info">
+          <h1 className="livro__titulo">{livro.titulo}</h1>
+          {livro.autores?.length > 0 && (
+            <p className="livro__autores">{livro.autores.join(', ')}</p>
+          )}
+          {detalhes && <p className="livro__detalhes">{detalhes}</p>}
+          {livro.isbn && <p className="livro__isbn">ISBN {livro.isbn}</p>}
+
+          <div className="livro__avaliacao">
+            {media != null ? (
+              <>
+                <Stars nota={media} size={16} />
+                <strong>{media.toFixed(1)}</strong>
+                <span>
+                  ({resenhas.length} {resenhas.length === 1 ? 'resenha' : 'resenhas'})
+                </span>
+              </>
+            ) : (
+              <span className="livro__sem-nota">Ainda sem resenhas</span>
+            )}
+          </div>
+
+          {usuarioId && (
+            <EstanteControls
+              livroId={id}
+              usuarioId={usuarioId}
+              registro={minhaEstante}
+              onMudou={recarregar}
+            />
+          )}
+        </div>
+      </header>
+
+      {livro.sinopse && (
+        <section className="livro__secao">
+          <h2>Sinopse</h2>
+          <p className="livro__sinopse">{livro.sinopse}</p>
+        </section>
+      )}
+
+      <section className="livro__secao">
+        <h2>Sua resenha</h2>
+        {!usuarioId ? (
+          <p className="livro__aviso">
+            <Link to="/entrar">Entre</Link> para escrever uma resenha.
+          </p>
+        ) : editandoResenha || !minhaResenha ? (
+          <ReviewForm
+            resenhaAtual={minhaResenha}
+            onSubmit={salvarResenha}
+            onCancelar={minhaResenha ? () => setEditandoResenha(false) : undefined}
+          />
+        ) : (
+          <ReviewCard
+            resenha={minhaResenha}
+            mostrarUsuario={false}
+            acoes={
+              <>
+                <button
+                  type="button"
+                  className="livro__link-acao"
+                  onClick={() => setEditandoResenha(true)}
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  className="livro__link-acao livro__link-acao--danger"
+                  onClick={excluirResenha}
+                >
+                  Excluir
+                </button>
+              </>
+            }
+          />
+        )}
+      </section>
+
+      <section className="livro__secao">
+        <h2>
+          Resenhas da comunidade{' '}
+          {outrasResenhas.length > 0 && <span>({outrasResenhas.length})</span>}
+        </h2>
+        {outrasResenhas.length === 0 ? (
+          <p className="livro__aviso">Nenhuma outra resenha ainda.</p>
+        ) : (
+          <div className="livro__resenhas">
+            {outrasResenhas.map((r) => (
+              <ReviewCard key={r._id} resenha={r} />
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  )
+}

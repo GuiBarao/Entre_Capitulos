@@ -1,0 +1,223 @@
+/* Estilos de componentes reutilizáveis (resenha, formulário de resenha,
+   controles de estante). */
+
+/* -------------------------------------------------------------------------- */
+/* ReviewCard                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.review-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.review-card__book-cover {
+  flex-shrink: 0;
+}
+
+.review-card__book-cover:hover {
+  text-decoration: none;
+}
+
+.review-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-card__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.review-card__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.review-card__user:hover {
+  text-decoration: none;
+  color: var(--wine);
+}
+
+.review-card__book-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.review-card__book-title:hover {
+  color: var(--wine);
+  text-decoration: none;
+}
+
+.review-card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.review-card__date {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+}
+
+.review-card__text {
+  font-size: 0.92rem;
+  color: var(--text);
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.review-card__spoiler-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--wine);
+  background-color: var(--wine-tint);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.review-card__spoiler {
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  background-color: var(--surface-alt);
+}
+
+.review-card__spoiler:hover {
+  color: var(--text);
+  border-color: var(--wine-soft);
+}
+
+.review-card__acoes {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ReviewForm                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.review-form__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-form__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.review-form__textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.55;
+}
+
+.review-form__spoiler {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.review-form__actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* EstanteControls                                                            */
+/* -------------------------------------------------------------------------- */
+
+.estante-ctl {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.estante-ctl__label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.estante-ctl__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.estante-ctl__progresso {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  max-width: 320px;
+}
+
+.estante-ctl__progresso label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.estante-ctl__progresso input[type='range'] {
+  width: 100%;
+  accent-color: var(--wine);
+}
+
+.estante-ctl__prog-btn {
+  align-self: flex-start;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+}
+
+.estante-ctl__remover {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 0.83rem;
+}
+
+.estante-ctl__remover:hover {
+  color: var(--danger);
+}
