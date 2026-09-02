@@ -11,10 +11,6 @@ function Placeholder({ titulo, descricao }) {
   )
 }
 
-export const ListasPage = () => (
-  <Placeholder titulo="Minhas Listas" descricao="Coleções personalizadas de livros." />
-)
-
 export const PerfilPage = () => (
   <Placeholder titulo="Meu Perfil" descricao="Suas informações, resenhas e atividade." />
 )

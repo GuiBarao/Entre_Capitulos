@@ -1,0 +1,308 @@
+/* -------------------------------------------------------------------------- */
+/* Índice de listas                                                           */
+/* -------------------------------------------------------------------------- */
+
+.listas__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.listas__estado {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.listas__estado--erro {
+  color: var(--danger);
+}
+
+.listas__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.lista-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  color: inherit;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.lista-card:hover {
+  text-decoration: none;
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}
+
+.lista-card__capas {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.lista-card__vazia {
+  width: 52px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background-color: var(--cream-dark);
+  color: var(--text-soft);
+}
+
+.lista-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lista-card__nome {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.lista-card__desc {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 4px 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lista-card__total {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+}
+
+.lista-card__seta {
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Formulário de lista                                                        */
+/* -------------------------------------------------------------------------- */
+
+.lista-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lista-form__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.lista-form__actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Detalhe da lista                                                           */
+/* -------------------------------------------------------------------------- */
+
+.lista-det__estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 56px 0;
+  color: var(--text-muted);
+}
+
+.lista-det__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+}
+
+.lista-det__voltar:hover {
+  color: var(--wine);
+}
+
+.lista-det__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.lista-det__desc {
+  color: var(--text-muted);
+  margin-top: 6px;
+  max-width: 52ch;
+}
+
+.lista-det__meta {
+  color: var(--text-soft);
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+.lista-det__acoes {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.lista-det__excluir:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Adicionar livro */
+
+.lista-add {
+  margin-top: 22px;
+  max-width: 460px;
+}
+
+.lista-add__resultados {
+  list-style: none;
+  padding: 6px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lista-add__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  color: var(--text);
+}
+
+.lista-add__item:hover {
+  background-color: var(--surface-alt);
+}
+
+.lista-add__item span {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lista-add__item strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.lista-add__item em {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+.lista-add__item svg {
+  color: var(--wine);
+}
+
+/* Livros da lista */
+
+.lista-det__livros {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px 16px;
+  margin-top: 28px;
+}
+
+.lista-livro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lista-livro__cover {
+  align-self: flex-start;
+}
+
+.lista-livro__cover:hover {
+  text-decoration: none;
+}
+
+.lista-livro .book-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+}
+
+.lista-livro__titulo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.lista-livro__titulo:hover {
+  color: var(--wine);
+  text-decoration: none;
+}
+
+.lista-livro__autor {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.lista-livro__remover {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: rgba(43, 38, 38, 0.62);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.14s ease;
+}
+
+.lista-livro:hover .lista-livro__remover,
+.lista-livro__remover:focus-visible {
+  opacity: 1;
+}
+
+.lista-livro__remover:hover {
+  background-color: var(--danger);
+}
+
+@media (max-width: 480px) {
+  .lista-det__livros {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
