@@ -69,11 +69,11 @@ export function AppLayout() {
         </button>
       </aside>
 
-      <div className="app__content">
+      <main className="app__content">
         <div className="app__content-inner">
           <Outlet />
         </div>
-      </div>
+      </main>
     </div>
   )
 }

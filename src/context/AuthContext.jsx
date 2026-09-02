@@ -22,6 +22,12 @@ export function AuthProvider({ children }) {
     setCarregando(false)
   }, [])
 
+  // Encerra a sessão quando o cliente HTTP detecta token expirado/inválido.
+  useEffect(() => {
+    window.addEventListener('ec:sessao-expirada', logout)
+    return () => window.removeEventListener('ec:sessao-expirada', logout)
+  }, [logout])
+
   // Sincroniza o token com o armazenamento e carrega o usuário logado.
   useEffect(() => {
     if (!token) {

@@ -35,6 +35,7 @@ function App() {
           <Route path="/listas/:id" element={<ListaPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/usuarios/:id" element={<PerfilPage />} />
+          <Route path="*" element={<NaoEncontradaPage />} />
         </Route>
       </Route>
 

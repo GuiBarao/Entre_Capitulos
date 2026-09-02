@@ -68,6 +68,14 @@ export async function request(path, options = {}) {
 
   if (!response.ok) {
     const message = data?.mensagem || data?.message || 'Erro ao processar a requisição.'
+
+    // Token ausente/expirado/inválido: avisa a aplicação para encerrar a sessão.
+    const tokenInvalido =
+      response.status === 401 || (response.status === 403 && /token/i.test(message))
+    if (tokenInvalido && auth && getToken()) {
+      window.dispatchEvent(new CustomEvent('ec:sessao-expirada'))
+    }
+
     throw new ApiError(message, response.status, data)
   }
 
