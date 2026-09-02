@@ -59,6 +59,29 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  text-align: left;
+}
+
+.perfil__stat--btn {
+  border-radius: var(--radius-sm);
+  transition: opacity 0.14s ease;
+}
+
+.perfil__stat--btn:hover {
+  opacity: 0.65;
+}
+
+.perfil__privado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 50px 20px;
+  margin-top: 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
 }
 
 .perfil__stat-num {

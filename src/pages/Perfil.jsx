@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { usePerfil } from '../hooks/usePerfil'
 import { useFeed } from '../hooks/useFeed'
+import { seguidores as seguidoresApi } from '../api/resources'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { BookCover } from '../components/BookCover'
@@ -11,6 +12,7 @@ import { EditarPerfilForm } from '../components/EditarPerfilForm'
 import { ReviewCard } from '../components/ReviewCard'
 import { ListaCard } from '../components/ListaCard'
 import { FeedItem } from '../components/FeedItem'
+import { SeguidoresModal } from '../components/SeguidoresModal'
 import { idDe, rotuloStatus, STATUS_ESTANTE } from '../utils/dados'
 import './perfil.css'
 
@@ -31,6 +33,14 @@ export function PerfilPage() {
 
   const [aba, setAba] = useState('Estante')
   const [editando, setEditando] = useState(false)
+  const [modalSeguir, setModalSeguir] = useState(null) // 'seguidores' | 'seguindo'
+  const [processandoSeguir, setProcessandoSeguir] = useState(false)
+
+  const meuRegistroSeguir = useMemo(
+    () => (eu ? seguidores.find((r) => idDe(r.seguidor_id) === eu._id) : null),
+    [seguidores, eu],
+  )
+  const jaSegue = Boolean(meuRegistroSeguir)
 
   const lidos = useMemo(() => estante.filter((e) => e.status === 'lido'), [estante])
   const paginometro = useMemo(
@@ -73,10 +83,31 @@ export function PerfilPage() {
     await recarregar()
   }
 
+  async function alternarSeguir() {
+    if (!eu || processandoSeguir) return
+    setProcessandoSeguir(true)
+    try {
+      if (meuRegistroSeguir) {
+        await seguidoresApi.excluir(meuRegistroSeguir._id)
+      } else {
+        await seguidoresApi.criar({ seguidor_id: eu._id, seguido_id: perfilId })
+      }
+      await recarregar()
+    } finally {
+      setProcessandoSeguir(false)
+    }
+  }
+
+  const perfilPrivado = usuario.privado && !ehMeuPerfil && !jaSegue
+
   const stats = [
     { valor: lidos.length, rotulo: 'Lidos' },
-    { valor: seguidores.length, rotulo: 'Seguidores' },
-    { valor: seguindo.length, rotulo: 'Seguindo' },
+    {
+      valor: seguidores.length,
+      rotulo: 'Seguidores',
+      acao: () => setModalSeguir('seguidores'),
+    },
+    { valor: seguindo.length, rotulo: 'Seguindo', acao: () => setModalSeguir('seguindo') },
     { valor: paginometro.toLocaleString('pt-BR'), rotulo: 'Paginômetro' },
   ]
 
@@ -85,7 +116,7 @@ export function PerfilPage() {
       <section className="perfil__card">
         <div className="perfil__topo">
           <Avatar usuario={usuario} size={72} />
-          {ehMeuPerfil && (
+          {ehMeuPerfil ? (
             <button
               type="button"
               className="btn btn--ghost perfil__editar"
@@ -94,6 +125,18 @@ export function PerfilPage() {
               <Icon name="edit" size={15} />
               Editar perfil
             </button>
+          ) : (
+            eu && (
+              <button
+                type="button"
+                className={`btn ${jaSegue ? 'btn--ghost' : 'btn--primary'} perfil__editar`}
+                onClick={alternarSeguir}
+                disabled={processandoSeguir}
+              >
+                <Icon name={jaSegue ? 'check' : 'plus'} size={15} />
+                {jaSegue ? 'Seguindo' : 'Seguir'}
+              </button>
+            )
           )}
         </div>
 
@@ -107,15 +150,32 @@ export function PerfilPage() {
         )}
 
         <div className="perfil__stats">
-          {stats.map((s) => (
-            <div key={s.rotulo} className="perfil__stat">
-              <span className="perfil__stat-num">{s.valor}</span>
-              <span className="perfil__stat-label">{s.rotulo}</span>
-            </div>
-          ))}
+          {stats.map((s) => {
+            const Tag = s.acao ? 'button' : 'div'
+            return (
+              <Tag
+                key={s.rotulo}
+                type={s.acao ? 'button' : undefined}
+                className={`perfil__stat${s.acao ? ' perfil__stat--btn' : ''}`}
+                onClick={s.acao}
+              >
+                <span className="perfil__stat-num">{s.valor}</span>
+                <span className="perfil__stat-label">{s.rotulo}</span>
+              </Tag>
+            )
+          })}
         </div>
       </section>
 
+      {perfilPrivado && (
+        <div className="perfil__privado">
+          <Icon name="user" size={22} />
+          <p>Este perfil é privado. Siga {usuario.nome} para ver as leituras.</p>
+        </div>
+      )}
+
+      {!perfilPrivado && (
+      <>
       <div className="perfil__tabs" role="tablist">
         {ABAS.map((a) => (
           <button
@@ -197,6 +257,8 @@ export function PerfilPage() {
             </ul>
           ))}
       </div>
+      </>
+      )}
 
       <Modal titulo="Editar perfil" aberto={editando} onFechar={() => setEditando(false)}>
         <EditarPerfilForm
@@ -205,6 +267,21 @@ export function PerfilPage() {
           onCancelar={() => setEditando(false)}
         />
       </Modal>
+
+      <SeguidoresModal
+        aberto={modalSeguir === 'seguidores'}
+        onFechar={() => setModalSeguir(null)}
+        titulo="Seguidores"
+        registros={seguidores}
+        campo="seguidor_id"
+      />
+      <SeguidoresModal
+        aberto={modalSeguir === 'seguindo'}
+        onFechar={() => setModalSeguir(null)}
+        titulo="Seguindo"
+        registros={seguindo}
+        campo="seguido_id"
+      />
     </div>
   )
 }
