@@ -5,6 +5,7 @@ import { SearchBar } from '../components/SearchBar'
 import { BookListItem } from '../components/BookListItem'
 import { BookCover } from '../components/BookCover'
 import { Stars } from '../components/Stars'
+import { Icon } from '../components/Icon'
 import { Link } from 'react-router-dom'
 import { idDe, semAcento } from '../utils/dados'
 import './explorar.css'
@@ -73,7 +74,13 @@ export function ExplorarPage() {
 
   return (
     <div className="explorar">
-      <h1 className="page-title">Explorar</h1>
+      <header className="explorar__cabecalho">
+        <h1 className="page-title">Explorar</h1>
+        <Link to="/livros/novo" className="btn btn--ghost">
+          <Icon name="plus" size={16} />
+          Novo livro
+        </Link>
+      </header>
 
       <SearchBar
         className="explorar__search"

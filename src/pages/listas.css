@@ -181,6 +181,12 @@
   max-width: 460px;
 }
 
+.lista-add__vazio {
+  margin-top: 10px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
 .lista-add__resultados {
   list-style: none;
   padding: 6px;

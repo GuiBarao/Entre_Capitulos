@@ -216,6 +216,12 @@ function AdicionarLivro({ jaNaLista, busca, setBusca, onAdicionar, desabilitado 
         onChange={setBusca}
         onSubmit={setBusca}
       />
+      {busca.trim() && resultados.length === 0 && (
+        <p className="lista-add__vazio">
+          Nenhum livro encontrado.{' '}
+          <Link to="/livros/novo">Cadastrar um novo livro</Link>
+        </p>
+      )}
       {resultados.length > 0 && (
         <ul className="lista-add__resultados">
           {resultados.map((l) => (

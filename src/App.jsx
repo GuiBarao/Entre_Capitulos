@@ -5,6 +5,7 @@ import { ProtectedRoute, PublicOnlyRoute } from './routes/ProtectedRoute'
 import { InicioPage } from './pages/Inicio'
 import { ExplorarPage } from './pages/Explorar'
 import { LivroPage } from './pages/Livro'
+import { NovoLivroPage } from './pages/NovoLivro'
 import { EstantePage } from './pages/Estante'
 import { ListasPage } from './pages/Listas'
 import { ListaPage } from './pages/Lista'
@@ -27,6 +28,7 @@ function App() {
         <Route element={<AppLayout />}>
           <Route index element={<InicioPage />} />
           <Route path="/explorar" element={<ExplorarPage />} />
+          <Route path="/livros/novo" element={<NovoLivroPage />} />
           <Route path="/livros/:id" element={<LivroPage />} />
           <Route path="/estante" element={<EstantePage />} />
           <Route path="/listas" element={<ListasPage />} />

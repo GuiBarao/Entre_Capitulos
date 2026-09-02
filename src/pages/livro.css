@@ -111,6 +111,44 @@
   color: var(--danger);
 }
 
+/* Cadastro de livro */
+
+.novo-livro__form {
+  margin-top: 22px;
+  max-width: 560px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.livro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.livro-form__linha {
+  display: flex;
+  gap: 14px;
+}
+
+.livro-form__linha > .field {
+  flex: 1;
+}
+
+.livro-form__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 520px) {
+  .livro-form__linha {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 640px) {
   .livro__header {
     flex-direction: column;
