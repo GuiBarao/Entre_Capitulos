@@ -11,10 +11,6 @@ function Placeholder({ titulo, descricao }) {
   )
 }
 
-export const EstantePage = () => (
-  <Placeholder titulo="Minha Estante" descricao="Seus livros por status de leitura." />
-)
-
 export const ListasPage = () => (
   <Placeholder titulo="Minhas Listas" descricao="Coleções personalizadas de livros." />
 )
