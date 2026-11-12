@@ -31,6 +31,11 @@ export function AuthProvider({ children }) {
     setCarregando(false)
   }, [])
 
+  useEffect(() => {
+    window.addEventListener('ec:sessao-expirada', logout)
+    return () => window.removeEventListener('ec:sessao-expirada', logout)
+  }, [logout])
+
   // Sincroniza o token com o armazenamento e carrega o usuário logado.
   useEffect(() => {
     if (!hidratado) return
