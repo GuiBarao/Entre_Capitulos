@@ -18,11 +18,13 @@ import './listas.css'
 export function ListaPage() {
   const { id } = useParams()
   const router = useRouter()
-  const { usuario } = useAuth()
+  const { usuario, ehAdmin } = useAuth()
   const { listas, carregando, erro, recarregar } = useListas()
 
   const lista = useMemo(() => listas.find((l) => mesmoId(l, id)), [listas, id])
   const dono = lista && usuario && mesmoId(lista.usuario_id, usuario._id)
+  // Administradores podem excluir listas de outros usuários (moderação).
+  const moderador = ehAdmin && !dono
 
   const [editando, setEditando] = useState(false)
   const [buscaLivro, setBuscaLivro] = useState('')
@@ -63,8 +65,12 @@ export function ListaPage() {
 
   async function excluirLista() {
     if (!window.confirm(`Excluir a lista "${lista.nome}"?`)) return
-    await listasApi.excluir(idDe(lista))
-    router.push('/listas')
+    try {
+      await listasApi.excluir(idDe(lista))
+      router.push('/listas')
+    } catch (err) {
+      window.alert(err.message || 'Não foi possível excluir a lista.')
+    }
   }
 
   async function adicionarLivro(livroId) {
@@ -127,6 +133,20 @@ export function ListaPage() {
             >
               <Icon name="x" size={15} />
               Excluir
+            </button>
+          </div>
+        )}
+
+        {moderador && (
+          <div className="lista-det__acoes">
+            <span className="admin-tag">Administrador</span>
+            <button
+              type="button"
+              className="btn btn--ghost lista-det__excluir"
+              onClick={excluirLista}
+            >
+              <Icon name="x" size={15} />
+              Excluir (moderação)
             </button>
           </div>
         )}

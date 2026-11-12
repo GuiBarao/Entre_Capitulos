@@ -24,7 +24,7 @@ function estaAtivo(pathname, to, end) {
 
 export function AppLayout({ children }) {
   const pathname = usePathname()
-  const { usuario, logout } = useAuth()
+  const { usuario, logout, ehAdmin } = useAuth()
   const { itens } = useEstanteUsuario(usuario?._id)
 
   const lidos = useMemo(
@@ -64,6 +64,7 @@ export function AppLayout({ children }) {
             <span className="sidebar__user-name">{usuario?.nome || 'Meu perfil'}</span>
             <br />
             <span className="sidebar__user-meta">
+              {ehAdmin ? 'Administrador · ' : ''}
               {lidos} {lidos === 1 ? 'livro lido' : 'livros lidos'}
             </span>
           </span>

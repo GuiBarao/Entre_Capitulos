@@ -107,6 +107,9 @@ export function AuthProvider({ children }) {
       usuario,
       usuarioId,
       autenticado: Boolean(token),
+      // Papel vem da API (GET /usuarios/:id). A API é quem garante a regra;
+      // aqui serve só para mostrar/ocultar ações na interface.
+      ehAdmin: usuario?.papel === 'admin',
       carregando,
       login,
       registrar,

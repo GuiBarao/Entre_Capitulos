@@ -111,6 +111,21 @@
   color: var(--danger);
 }
 
+/* Ações de administrador */
+
+.livro__admin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.livro__admin-excluir:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
 /* Cadastro de livro */
 
 .novo-livro__form {

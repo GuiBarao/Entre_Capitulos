@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useLivro } from '../hooks/useLivro'
-import { resenhas as resenhasApi } from '../api/resources'
+import { livros as livrosApi, resenhas as resenhasApi } from '../api/resources'
 import { registrarAtividade, descricaoAtividade } from '../api/atividades'
 import { BookCover } from '../components/BookCover'
 import { Stars } from '../components/Stars'
@@ -13,18 +13,22 @@ import { Icon } from '../components/Icon'
 import { EstanteControls } from '../components/EstanteControls'
 import { ReviewForm } from '../components/ReviewForm'
 import { ReviewCard } from '../components/ReviewCard'
+import { Modal } from '../components/Modal'
+import { LivroForm } from '../components/LivroForm'
 import { idDe } from '../utils/dados'
 import './livro.css'
 
 export function LivroPage() {
   const { id } = useParams()
   const router = useRouter()
-  const { usuario } = useAuth()
+  const { usuario, ehAdmin } = useAuth()
   const usuarioId = usuario?._id
   const { livro, resenhas, media, minhaEstante, minhaResenha, carregando, erro, recarregar } =
     useLivro(id, usuarioId)
 
   const [editandoResenha, setEditandoResenha] = useState(false)
+  const [editandoLivro, setEditandoLivro] = useState(false)
+  const [erroAdmin, setErroAdmin] = useState('')
 
   if (carregando) {
     return (
@@ -64,6 +68,36 @@ export function LivroPage() {
     await recarregar()
   }
 
+  // ----- Ações de administrador -----
+
+  async function salvarLivro(dados) {
+    await livrosApi.atualizar(id, dados)
+    setEditandoLivro(false)
+    await recarregar()
+  }
+
+  async function excluirLivro() {
+    if (!window.confirm(`Excluir "${livro.titulo}" do catálogo? Resenhas e registros de estante desse livro também serão removidos.`)) return
+    setErroAdmin('')
+    try {
+      await livrosApi.excluir(id)
+      router.push('/explorar')
+    } catch (err) {
+      setErroAdmin(err.message || 'Não foi possível excluir o livro.')
+    }
+  }
+
+  async function moderarResenha(resenha) {
+    if (!window.confirm('Excluir esta resenha da comunidade?')) return
+    setErroAdmin('')
+    try {
+      await resenhasApi.excluir(resenha._id)
+      await recarregar()
+    } catch (err) {
+      setErroAdmin(err.message || 'Não foi possível excluir a resenha.')
+    }
+  }
+
   const detalhes = [livro.editora, livro.ano, livro.paginas && `${livro.paginas} páginas`]
     .filter(Boolean)
     .join(' • ')
@@ -99,6 +133,21 @@ export function LivroPage() {
               <span className="livro__sem-nota">Ainda sem resenhas</span>
             )}
           </div>
+
+          {ehAdmin && (
+            <div className="livro__admin">
+              <span className="admin-tag">Administrador</span>
+              <button type="button" className="btn btn--ghost" onClick={() => setEditandoLivro(true)}>
+                <Icon name="edit" size={15} />
+                Editar livro
+              </button>
+              <button type="button" className="btn btn--ghost livro__admin-excluir" onClick={excluirLivro}>
+                <Icon name="x" size={15} />
+                Excluir livro
+              </button>
+            </div>
+          )}
+          {erroAdmin && <p className="form-error">{erroAdmin}</p>}
 
           {usuarioId && (
             <EstanteControls
@@ -167,11 +216,35 @@ export function LivroPage() {
         ) : (
           <div className="livro__resenhas">
             {outrasResenhas.map((r) => (
-              <ReviewCard key={r._id} resenha={r} />
+              <ReviewCard
+                key={r._id}
+                resenha={r}
+                acoes={
+                  ehAdmin ? (
+                    <button
+                      type="button"
+                      className="livro__link-acao livro__link-acao--danger"
+                      onClick={() => moderarResenha(r)}
+                    >
+                      Excluir (moderação)
+                    </button>
+                  ) : null
+                }
+              />
             ))}
           </div>
         )}
       </section>
+
+      {ehAdmin && (
+        <Modal titulo="Editar livro" aberto={editandoLivro} onFechar={() => setEditandoLivro(false)}>
+          <LivroForm
+            livroAtual={livro}
+            onSubmit={salvarLivro}
+            onCancelar={() => setEditandoLivro(false)}
+          />
+        </Modal>
+      )}
     </div>
   )
 }

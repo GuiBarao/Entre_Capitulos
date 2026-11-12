@@ -1,7 +1,22 @@
 # Entre Capítulos — Front-end
 
 Interface web (Next.js + React) para a rede social de leitores **Entre Capítulos**.
-Consome a API REST do projeto `EntreCapitulos` (pasta `back/`).
+Consome a API REST do projeto [EntreCapitulos](https://github.com/FranBordinhao/EntreCapitulos).
+
+## Proposta
+
+O Entre Capítulos é uma rede social para leitores que reúne em um só lugar o
+controle de leitura e a interação entre usuários. Cada leitor pode:
+
+- cadastrar livros e organizar sua estante ("quero ler", "lendo", "lido",
+  "abandonado"), com progresso e datas de leitura;
+- escrever resenhas com nota e marcação de spoiler;
+- montar listas de livros públicas ou privadas;
+- seguir outros leitores e acompanhar suas atividades no feed.
+
+O conteúdo pode ser explorado por todos os usuários logados, mas cada um só
+altera o que é seu. Administradores também gerenciam o catálogo de livros e
+moderam resenhas e listas.
 
 ## Stack
 
@@ -14,19 +29,21 @@ Consome a API REST do projeto `EntreCapitulos` (pasta `back/`).
 ## Pré-requisitos
 
 - Node.js 20.9+
-- A API `EntreCapitulos` rodando em `http://localhost:3000`
-  (com o MongoDB ativo). Veja o README da API.
+- MongoDB rodando localmente na porta padrão (`27017`)
+- A API [EntreCapitulos](https://github.com/FranBordinhao/EntreCapitulos)
 
 ## Rodando
 
-Em um terminal, suba a API (pasta `back/`):
+Em um terminal, suba a API:
 
 ```bash
+git clone https://github.com/FranBordinhao/EntreCapitulos.git
+cd EntreCapitulos
 npm install
 npm run dev
 ```
 
-Em outro terminal, suba o front (esta pasta):
+Em outro terminal, suba o front (este repositório):
 
 ```bash
 npm install
@@ -46,13 +63,25 @@ MongoDB.
 Estes usuários são pré-cadastrados automaticamente quando a API sobe
 (caso ainda não existam no banco):
 
-| Nome | E-mail | Senha | Perfil |
+| Nome | E-mail | Senha | Papel |
 |---|---|---|---|
+| Administrador | `admin@entrecapitulos.com` | `admin123` | Admin |
 | Ana Beatriz Silva | `ana@entrecapitulos.com` | `senha123` | Leitor (perfil público) |
 | Rafael Nunes | `rafael@entrecapitulos.com` | `senha123` | Leitor (perfil privado) |
 
-Todos os usuários têm o mesmo papel (leitor): cada um só pode editar e excluir
-o que é seu (estante, resenhas, listas, perfil).
+### Papéis e permissões
+
+| Ação | Leitor | Admin |
+|---|---|---|
+| Ver catálogo, resenhas e listas públicas | ✅ | ✅ |
+| Cadastrar livro | ✅ | ✅ |
+| Gerenciar a própria estante, resenhas, listas e perfil | ✅ | ✅ |
+| Editar e excluir livros do catálogo | ❌ | ✅ |
+| Excluir resenhas e listas de outros usuários (moderação) | ❌ | ✅ |
+
+As ações que o usuário logado não pode executar ficam ocultas na interface, e a
+API recusa a operação (`403`) mesmo se for chamada diretamente. Novas contas
+criadas pela tela de cadastro são sempre do papel **leitor**.
 
 ## Scripts
 
