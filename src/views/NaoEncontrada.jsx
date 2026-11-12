@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
 
 export function NaoEncontradaPage() {
   return (
@@ -16,7 +18,7 @@ export function NaoEncontradaPage() {
           404
         </h1>
         <p className="page-subtitle">Esta página não existe.</p>
-        <Link to="/" className="btn btn--primary" style={{ marginTop: 20 }}>
+        <Link href="/" className="btn btn--primary" style={{ marginTop: 20 }}>
           Voltar ao início
         </Link>
       </div>

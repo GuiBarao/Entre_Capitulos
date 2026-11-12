@@ -1,21 +1,23 @@
-import { useNavigate } from 'react-router-dom'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { livros as livrosApi } from '../api/resources'
 import { LivroForm } from '../components/LivroForm'
 import { Icon } from '../components/Icon'
 import './livro.css'
 
 export function NovoLivroPage() {
-  const navigate = useNavigate()
+  const router = useRouter()
 
   async function criar(dados) {
     const livro = await livrosApi.criar(dados)
-    if (livro?._id) navigate(`/livros/${livro._id}`, { replace: true })
-    else navigate('/explorar')
+    if (livro?._id) router.replace(`/livros/${livro._id}`)
+    else router.push('/explorar')
   }
 
   return (
     <div className="novo-livro">
-      <button type="button" className="livro__voltar" onClick={() => navigate(-1)}>
+      <button type="button" className="livro__voltar" onClick={() => router.back()}>
         <Icon name="chevron-left" size={16} />
         Voltar
       </button>
@@ -26,7 +28,7 @@ export function NovoLivroPage() {
       </p>
 
       <div className="novo-livro__form">
-        <LivroForm onSubmit={criar} onCancelar={() => navigate(-1)} />
+        <LivroForm onSubmit={criar} onCancelar={() => router.back()} />
       </div>
     </div>
   )

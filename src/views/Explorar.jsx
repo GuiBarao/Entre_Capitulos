@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCatalogo } from '../hooks/useCatalogo'
 import { useListas } from '../hooks/useListas'
 import { SearchBar } from '../components/SearchBar'
@@ -8,7 +11,6 @@ import { BookCover } from '../components/BookCover'
 import { Stars } from '../components/Stars'
 import { Icon } from '../components/Icon'
 import { ListaCard } from '../components/ListaCard'
-import { Link } from 'react-router-dom'
 import { idDe, semAcento } from '../utils/dados'
 import './explorar.css'
 
@@ -37,7 +39,9 @@ function combina(livro, termo) {
 }
 
 export function ExplorarPage() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const { livros, carregando, erro } = useCatalogo()
   const { listas } = useListas()
 
@@ -49,10 +53,11 @@ export function ExplorarPage() {
   useEffect(() => {
     const atual = searchParams.get('q') || ''
     if (busca !== atual) {
-      const next = new URLSearchParams(searchParams)
-      if (busca) next.set('q', busca)
-      else next.delete('q')
-      setSearchParams(next, { replace: true })
+      const params = new URLSearchParams(searchParams.toString())
+      if (busca) params.set('q', busca)
+      else params.delete('q')
+      const qs = params.toString()
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busca])
@@ -88,7 +93,7 @@ export function ExplorarPage() {
     <div className="explorar">
       <header className="explorar__cabecalho">
         <h1 className="page-title">Explorar</h1>
-        <Link to="/livros/novo" className="btn btn--ghost">
+        <Link href="/livros/novo" className="btn btn--ghost">
           <Icon name="plus" size={16} />
           Novo livro
         </Link>
@@ -156,7 +161,7 @@ export function ExplorarPage() {
               </header>
               <div className="explorar__destaques">
                 {melhores.map((l) => (
-                  <Link key={idDe(l)} to={`/livros/${idDe(l)}`} className="destaque">
+                  <Link key={idDe(l)} href={`/livros/${idDe(l)}`} className="destaque">
                     <BookCover livro={l} size="md" />
                     <span className="destaque__title">{l.titulo}</span>
                     <span className="destaque__rating">

@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { getToken, setToken } from '../api/client'
 import { auth as authApi, usuarios as usuariosApi } from '../api/resources'
@@ -6,12 +8,19 @@ import { decodeJwt, isTokenExpired } from '../utils/jwt'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [token, setTokenState] = useState(() => {
-    const stored = getToken()
-    return stored && !isTokenExpired(stored) ? stored : null
-  })
+  // O Next renderiza primeiro no servidor, onde não existe localStorage.
+  // Por isso o token só é lido depois de montar no navegador (evita
+  // diferença de hidratação); até lá a sessão fica "carregando".
+  const [token, setTokenState] = useState(null)
+  const [hidratado, setHidratado] = useState(false)
   const [usuario, setUsuario] = useState(null)
-  const [carregando, setCarregando] = useState(Boolean(token))
+  const [carregando, setCarregando] = useState(true)
+
+  useEffect(() => {
+    const stored = getToken()
+    setTokenState(stored && !isTokenExpired(stored) ? stored : null)
+    setHidratado(true)
+  }, [])
 
   const usuarioId = useMemo(() => decodeJwt(token)?.id ?? null, [token])
 
@@ -22,16 +31,13 @@ export function AuthProvider({ children }) {
     setCarregando(false)
   }, [])
 
-  // Encerra a sessão quando o cliente HTTP detecta token expirado/inválido.
-  useEffect(() => {
-    window.addEventListener('ec:sessao-expirada', logout)
-    return () => window.removeEventListener('ec:sessao-expirada', logout)
-  }, [logout])
-
   // Sincroniza o token com o armazenamento e carrega o usuário logado.
   useEffect(() => {
+    if (!hidratado) return
+
     if (!token) {
       setToken(null)
+      setCarregando(false)
       return
     }
 
@@ -59,7 +65,7 @@ export function AuthProvider({ children }) {
     return () => {
       ativo = false
     }
-  }, [token, usuarioId, logout])
+  }, [hidratado, token, usuarioId, logout])
 
   const login = useCallback(async (email, senha) => {
     const { token: novoToken } = await authApi.login(email, senha)

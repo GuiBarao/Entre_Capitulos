@@ -1,5 +1,8 @@
+'use client'
+
 import { useMemo } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useEstanteUsuario } from '../hooks/useEstanteUsuario'
 import { Avatar } from '../components/Avatar'
@@ -14,7 +17,13 @@ const NAV = [
   { to: '/perfil', rotulo: 'Meu Perfil', icone: 'user' },
 ]
 
-export function AppLayout() {
+function estaAtivo(pathname, to, end) {
+  if (end) return pathname === to
+  return pathname === to || pathname.startsWith(`${to}/`)
+}
+
+export function AppLayout({ children }) {
+  const pathname = usePathname()
   const { usuario, logout } = useAuth()
   const { itens } = useEstanteUsuario(usuario?._id)
 
@@ -36,23 +45,20 @@ export function AppLayout() {
 
         <nav className="sidebar__nav">
           {NAV.map((item) => (
-            <NavLink
+            <Link
               key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `sidebar__link${isActive ? ' is-active' : ''}`
-              }
+              href={item.to}
+              className={`sidebar__link${estaAtivo(pathname, item.to, item.end) ? ' is-active' : ''}`}
             >
               <Icon name={item.icone} size={17} />
               {item.rotulo}
-            </NavLink>
+            </Link>
           ))}
         </nav>
 
         <div className="sidebar__spacer" />
 
-        <NavLink to="/perfil" className="sidebar__user">
+        <Link href="/perfil" className="sidebar__user">
           <Avatar usuario={usuario} size={40} />
           <span>
             <span className="sidebar__user-name">{usuario?.nome || 'Meu perfil'}</span>
@@ -61,7 +67,7 @@ export function AppLayout() {
               {lidos} {lidos === 1 ? 'livro lido' : 'livros lidos'}
             </span>
           </span>
-        </NavLink>
+        </Link>
 
         <button type="button" className="btn btn--ghost sidebar__logout" onClick={logout}>
           <Icon name="log-out" size={16} />
@@ -71,7 +77,7 @@ export function AppLayout() {
 
       <main className="app__content">
         <div className="app__content-inner">
-          <Outlet />
+          {children}
         </div>
       </main>
     </div>

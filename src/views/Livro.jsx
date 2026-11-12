@@ -1,5 +1,8 @@
+'use client'
+
 import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useLivro } from '../hooks/useLivro'
 import { resenhas as resenhasApi } from '../api/resources'
@@ -15,7 +18,7 @@ import './livro.css'
 
 export function LivroPage() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  const router = useRouter()
   const { usuario } = useAuth()
   const usuarioId = usuario?._id
   const { livro, resenhas, media, minhaEstante, minhaResenha, carregando, erro, recarregar } =
@@ -35,7 +38,7 @@ export function LivroPage() {
     return (
       <div className="livro__estado">
         <p>{erro?.status === 404 ? 'Livro não encontrado.' : erro?.message || 'Erro ao carregar.'}</p>
-        <button type="button" className="btn btn--ghost" onClick={() => navigate(-1)}>
+        <button type="button" className="btn btn--ghost" onClick={() => router.back()}>
           Voltar
         </button>
       </div>
@@ -67,7 +70,7 @@ export function LivroPage() {
 
   return (
     <div className="livro">
-      <button type="button" className="livro__voltar" onClick={() => navigate(-1)}>
+      <button type="button" className="livro__voltar" onClick={() => router.back()}>
         <Icon name="chevron-left" size={16} />
         Voltar
       </button>
@@ -120,7 +123,7 @@ export function LivroPage() {
         <h2>Sua resenha</h2>
         {!usuarioId ? (
           <p className="livro__aviso">
-            <Link to="/entrar">Entre</Link> para escrever uma resenha.
+            <Link href="/entrar">Entre</Link> para escrever uma resenha.
           </p>
         ) : editandoResenha || !minhaResenha ? (
           <ReviewForm

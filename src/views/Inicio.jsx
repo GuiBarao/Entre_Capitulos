@@ -1,5 +1,7 @@
+'use client'
+
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useFeed } from '../hooks/useFeed'
 import { useIdsSeguidos } from '../hooks/useIdsSeguidos'
@@ -9,7 +11,7 @@ import { idDe } from '../utils/dados'
 import './inicio.css'
 
 export function InicioPage() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { usuario } = useAuth()
   const { itens, carregando, erro } = useFeed({ limite: 40 })
   const { ids: seguidos } = useIdsSeguidos(usuario?._id)
@@ -17,8 +19,8 @@ export function InicioPage() {
   const [escopo, setEscopo] = useState('seguindo') // 'seguindo' | 'todos'
 
   function buscar(q) {
-    if (q) navigate(`/explorar?q=${encodeURIComponent(q)}`)
-    else navigate('/explorar')
+    if (q) router.push(`/explorar?q=${encodeURIComponent(q)}`)
+    else router.push('/explorar')
   }
 
   const visiveis = useMemo(() => {

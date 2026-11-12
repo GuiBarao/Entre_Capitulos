@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { Avatar } from './Avatar'
 import { BookCover } from './BookCover'
 import { Icon } from './Icon'
@@ -43,12 +43,12 @@ function LinhaLivro({ livro, nota, texto }) {
   const livroId = idDe(livro)
   return (
     <div className="feed-card__body">
-      <Link to={livroId ? `/livros/${livroId}` : '#'} className="feed-card__cover">
+      <Link href={livroId ? `/livros/${livroId}` : '#'} className="feed-card__cover">
         <BookCover livro={livro} size="sm" />
       </Link>
       <div className="feed-card__book">
         <Link
-          to={livroId ? `/livros/${livroId}` : '#'}
+          href={livroId ? `/livros/${livroId}` : '#'}
           className="feed-card__book-title"
         >
           {livro?.titulo || 'Livro'}
@@ -67,14 +67,14 @@ function BlocoLista({ lista, livros, totalLivros }) {
   const listaId = idDe(lista)
   return (
     <div className="feed-card__body feed-card__body--lista">
-      <Link to={listaId ? `/listas/${listaId}` : '#'} className="feed-card__stack">
+      <Link href={listaId ? `/listas/${listaId}` : '#'} className="feed-card__stack">
         {(livros.length ? livros.slice(0, 3) : [null, null, null]).map((l, i) => (
           <BookCover key={idDe(l) || i} livro={l} titulo={l ? undefined : ' '} size="sm" />
         ))}
       </Link>
       <div className="feed-card__book">
         <Link
-          to={listaId ? `/listas/${listaId}` : '#'}
+          href={listaId ? `/listas/${listaId}` : '#'}
           className="feed-card__book-title"
         >
           {lista?.nome || 'Lista'}
@@ -85,7 +85,7 @@ function BlocoLista({ lista, livros, totalLivros }) {
         {lista?.descricao && <p className="feed-card__quote">{lista.descricao}</p>}
       </div>
       {listaId && (
-        <Link to={`/listas/${listaId}`} className="btn btn--ghost feed-card__ver-lista">
+        <Link href={`/listas/${listaId}`} className="btn btn--ghost feed-card__ver-lista">
           Ver lista
         </Link>
       )}
@@ -101,12 +101,12 @@ export function FeedItem({ item }) {
   return (
     <article className="feed-card">
       <header className="feed-card__head">
-        <Link to={usuarioId ? `/usuarios/${usuarioId}` : '#'}>
+        <Link href={usuarioId ? `/usuarios/${usuarioId}` : '#'}>
           <Avatar usuario={usuario} size={30} />
         </Link>
         <div className="feed-card__meta">
           <Link
-            to={usuarioId ? `/usuarios/${usuarioId}` : '#'}
+            href={usuarioId ? `/usuarios/${usuarioId}` : '#'}
             className="feed-card__user"
           >
             @{handle}

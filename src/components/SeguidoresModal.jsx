@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { Modal } from './Modal'
 import { Avatar } from './Avatar'
 import { idDe, handleUsuario } from '../utils/dados'
@@ -18,7 +18,7 @@ export function SeguidoresModal({ aberto, onFechar, titulo, registros, campo }) 
           {usuarios.map((u) => (
             <li key={idDe(u)}>
               <Link
-                to={`/usuarios/${idDe(u)}`}
+                href={`/usuarios/${idDe(u)}`}
                 className="seguidores-modal__item"
                 onClick={onFechar}
               >

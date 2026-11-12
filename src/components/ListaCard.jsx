@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { BookCover } from './BookCover'
 import { Icon } from './Icon'
 import { idDe } from '../utils/dados'
@@ -7,7 +7,7 @@ import { idDe } from '../utils/dados'
 export function ListaCard({ lista }) {
   const capas = (lista.livros || []).slice(0, 3)
   return (
-    <Link to={`/listas/${idDe(lista)}`} className="lista-card">
+    <Link href={`/listas/${idDe(lista)}`} className="lista-card">
       <div className="lista-card__capas">
         {capas.length > 0 ? (
           capas.map((item, i) => (

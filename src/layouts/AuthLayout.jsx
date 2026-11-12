@@ -1,10 +1,11 @@
-import { Outlet } from 'react-router-dom'
+'use client'
+
 import './auth.css'
 
 // Shell das telas públicas: painel da marca à esquerda + formulário à direita,
 // conforme o protótipo.
 
-export function AuthLayout() {
+export function AuthLayout({ children }) {
   return (
     <div className="auth">
       <aside className="auth__brand">
@@ -31,7 +32,7 @@ export function AuthLayout() {
       </aside>
 
       <main className="auth__panel">
-        <Outlet />
+        {children}
       </main>
     </div>
   )

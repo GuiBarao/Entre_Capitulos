@@ -10,12 +10,12 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.local
 
-# Variáveis de ambiente locais (.env.example fica versionado)
-.env
-.env.*
-!.env.example
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.local
 
 # Editor directories and files
 .vscode/*

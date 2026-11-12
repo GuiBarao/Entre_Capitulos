@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { BookCover } from './BookCover'
 import { Stars } from './Stars'
 import { idDe } from '../utils/dados'
@@ -9,7 +9,7 @@ export function BookListItem({ livro }) {
   const tags = (livro.tags || livro.generos || []).filter(Boolean)
 
   return (
-    <Link to={id ? `/livros/${id}` : '#'} className="book-row card">
+    <Link href={id ? `/livros/${id}` : '#'} className="book-row card">
       <BookCover livro={livro} size="sm" />
 
       <div className="book-row__main">

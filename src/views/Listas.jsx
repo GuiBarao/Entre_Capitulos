@@ -1,5 +1,7 @@
+'use client'
+
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useListas } from '../hooks/useListas'
 import { listas as listasApi } from '../api/resources'
@@ -13,7 +15,7 @@ import './listas.css'
 
 export function ListasPage() {
   const { usuario } = useAuth()
-  const navigate = useNavigate()
+  const router = useRouter()
   const { listas, carregando, erro, recarregar } = useListas(usuario?._id)
   const [modalAberto, setModalAberto] = useState(false)
 
@@ -22,7 +24,7 @@ export function ListasPage() {
     registrarAtividade(usuario._id, 'lista', descricaoAtividade.lista(dados.nome))
     setModalAberto(false)
     await recarregar()
-    if (nova?._id) navigate(`/listas/${nova._id}`)
+    if (nova?._id) router.push(`/listas/${nova._id}`)
   }
 
   return (

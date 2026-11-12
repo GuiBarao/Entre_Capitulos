@@ -1,5 +1,8 @@
+'use client'
+
 import { useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { usePerfil } from '../hooks/usePerfil'
 import { useFeed } from '../hooks/useFeed'
@@ -21,7 +24,7 @@ const ABAS = ['Estante', 'Resenhas', 'Listas', 'Atividade']
 
 export function PerfilPage() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  const router = useRouter()
   const { usuario: eu, atualizarUsuario, excluirConta } = useAuth()
   const perfilId = id || eu?._id
   const ehMeuPerfil = !!eu && perfilId === eu._id
@@ -87,7 +90,7 @@ export function PerfilPage() {
 
   async function excluirMinhaConta() {
     await excluirConta()
-    navigate('/entrar', { replace: true })
+    router.replace('/entrar')
   }
 
   async function alternarSeguir() {
@@ -213,7 +216,7 @@ export function PerfilPage() {
                   {estantePorStatus[s].map((e) => (
                     <Link
                       key={e._id}
-                      to={`/livros/${idDe(e.livro_id)}`}
+                      href={`/livros/${idDe(e.livro_id)}`}
                       className="perfil__capa"
                     >
                       <BookCover livro={e.livro_id} size="md" />

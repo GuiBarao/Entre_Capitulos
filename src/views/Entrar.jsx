@@ -1,17 +1,22 @@
+'use client'
+
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { destinoSeguro } from '../routes/ProtectedRoute'
 import { useAuth } from '../context/AuthContext'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const SENHA_MIN = 6
 
-export function CadastroPage() {
-  const { registrar } = useAuth()
-  const navigate = useNavigate()
+export function EntrarPage() {
+  const { login } = useAuth()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const destino = destinoSeguro(searchParams.get('from'))
 
-  const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  const [mostrarAjudaSenha, setMostrarAjudaSenha] = useState(false)
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
 
@@ -19,25 +24,21 @@ export function CadastroPage() {
     e.preventDefault()
     setErro('')
 
-    if (nome.trim().length < 2) {
-      setErro('Informe seu nome completo.')
-      return
-    }
     if (!EMAIL_RE.test(email)) {
       setErro('Informe um e-mail válido.')
       return
     }
-    if (senha.length < SENHA_MIN) {
-      setErro(`A senha deve ter pelo menos ${SENHA_MIN} caracteres.`)
+    if (!senha) {
+      setErro('Informe sua senha.')
       return
     }
 
     setEnviando(true)
     try {
-      await registrar({ nome: nome.trim(), email: email.trim(), senha })
-      navigate('/', { replace: true })
+      await login(email.trim(), senha)
+      router.replace(destino)
     } catch (err) {
-      setErro(err.message || 'Não foi possível criar a conta.')
+      setErro(err.message || 'Não foi possível entrar.')
     } finally {
       setEnviando(false)
     }
@@ -45,8 +46,8 @@ export function CadastroPage() {
 
   return (
     <div className="auth-form">
-      <h1 className="auth-form__title">Crie sua conta</h1>
-      <p className="auth-form__subtitle">Comece a registrar suas leituras</p>
+      <h1 className="auth-form__title">Bem-vindo de volta</h1>
+      <p className="auth-form__subtitle">Continue sua jornada literária</p>
 
       {erro && (
         <p className="auth-form__alert" role="alert">
@@ -57,43 +58,44 @@ export function CadastroPage() {
       <form onSubmit={handleSubmit} noValidate>
         <div className="auth-form__fields">
           <div className="field">
-            <label htmlFor="nome">Nome completo</label>
-            <input
-              id="nome"
-              className="input"
-              type="text"
-              autoComplete="name"
-              placeholder="Ana Beatriz Silva"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-          </div>
-
-          <div className="field">
             <label htmlFor="email">E-mail</label>
             <input
               id="email"
               className="input"
               type="email"
               autoComplete="email"
-              placeholder="ana@email.com"
+              placeholder="ana@exemplo.com.br"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div className="field">
-            <label htmlFor="senha">Senha</label>
+            <div className="auth-form__label-row">
+              <label htmlFor="senha">Senha</label>
+              <button
+                type="button"
+                className="auth-form__forgot"
+                onClick={() => setMostrarAjudaSenha((v) => !v)}
+              >
+                Esqueci a senha
+              </button>
+            </div>
             <input
               id="senha"
               className="input"
               type="password"
-              autoComplete="new-password"
+              autoComplete="current-password"
               placeholder="••••••••"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
-            <p className="auth-form__hint">Mínimo de {SENHA_MIN} caracteres.</p>
+            {mostrarAjudaSenha && (
+              <p className="auth-form__hint">
+                A recuperação de senha ainda não está disponível. Entre em contato com o
+                suporte para redefinir seu acesso.
+              </p>
+            )}
           </div>
         </div>
 
@@ -102,14 +104,14 @@ export function CadastroPage() {
           className="btn btn--primary btn--block auth-form__submit"
           disabled={enviando}
         >
-          {enviando ? 'Criando conta...' : 'Criar conta'}
+          {enviando ? 'Entrando...' : 'Entrar'}
         </button>
       </form>
 
       <hr className="auth-form__divider" />
 
       <p className="auth-form__switch">
-        Já tem conta? <Link to="/entrar">Entre aqui</Link>
+        Não tem conta? <Link href="/cadastro">Criar conta grátis</Link>
       </p>
     </div>
   )

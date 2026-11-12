@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { Avatar } from './Avatar'
 import { BookCover } from './BookCover'
 import { Stars } from './Stars'
@@ -23,7 +23,7 @@ export function ReviewCard({
   return (
     <article className="review-card">
       {mostrarLivro && livro && typeof livro === 'object' && (
-        <Link to={livroId ? `/livros/${livroId}` : '#'} className="review-card__book-cover">
+        <Link href={livroId ? `/livros/${livroId}` : '#'} className="review-card__book-cover">
           <BookCover livro={livro} size="sm" />
         </Link>
       )}
@@ -31,14 +31,14 @@ export function ReviewCard({
       <div className="review-card__body">
         <header className="review-card__head">
           {mostrarUsuario && usuario && typeof usuario === 'object' && (
-            <Link to={usuarioId ? `/usuarios/${usuarioId}` : '#'} className="review-card__user">
+            <Link href={usuarioId ? `/usuarios/${usuarioId}` : '#'} className="review-card__user">
               <Avatar usuario={usuario} size={30} />
               <span>{usuario.nome}</span>
             </Link>
           )}
 
           {mostrarLivro && livro && typeof livro === 'object' && (
-            <Link to={livroId ? `/livros/${livroId}` : '#'} className="review-card__book-title">
+            <Link href={livroId ? `/livros/${livroId}` : '#'} className="review-card__book-title">
               {livro.titulo}
             </Link>
           )}

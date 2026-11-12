@@ -1,5 +1,8 @@
+'use client'
+
 import { useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { useListas } from '../hooks/useListas'
 import { useCatalogo } from '../hooks/useCatalogo'
@@ -14,7 +17,7 @@ import './listas.css'
 
 export function ListaPage() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  const router = useRouter()
   const { usuario } = useAuth()
   const { listas, carregando, erro, recarregar } = useListas()
 
@@ -37,7 +40,7 @@ export function ListaPage() {
     return (
       <div className="lista-det__estado">
         <p>{erro ? erro.message : 'Lista não encontrada.'}</p>
-        <button type="button" className="btn btn--ghost" onClick={() => navigate('/listas')}>
+        <button type="button" className="btn btn--ghost" onClick={() => router.push('/listas')}>
           Minhas listas
         </button>
       </div>
@@ -61,7 +64,7 @@ export function ListaPage() {
   async function excluirLista() {
     if (!window.confirm(`Excluir a lista "${lista.nome}"?`)) return
     await listasApi.excluir(idDe(lista))
-    navigate('/listas')
+    router.push('/listas')
   }
 
   async function adicionarLivro(livroId) {
@@ -89,7 +92,7 @@ export function ListaPage() {
 
   return (
     <div className="lista-det">
-      <Link to="/listas" className="lista-det__voltar">
+      <Link href="/listas" className="lista-det__voltar">
         <Icon name="chevron-left" size={16} />
         Minhas listas
       </Link>
@@ -105,7 +108,7 @@ export function ListaPage() {
               <>
                 {' '}
                 · por{' '}
-                <Link to={`/usuarios/${idDe(lista.usuario_id)}`}>{donoNome}</Link>
+                <Link href={`/usuarios/${idDe(lista.usuario_id)}`}>{donoNome}</Link>
               </>
             )}
           </p>
@@ -147,11 +150,11 @@ export function ListaPage() {
             const livroId = idDe(item.livro)
             return (
               <div key={item.relId} className="lista-livro">
-                <Link to={livroId ? `/livros/${livroId}` : '#'} className="lista-livro__cover">
+                <Link href={livroId ? `/livros/${livroId}` : '#'} className="lista-livro__cover">
                   <BookCover livro={item.livro} size="md" />
                 </Link>
                 <Link
-                  to={livroId ? `/livros/${livroId}` : '#'}
+                  href={livroId ? `/livros/${livroId}` : '#'}
                   className="lista-livro__titulo"
                 >
                   {item.livro?.titulo || 'Livro'}
@@ -219,7 +222,7 @@ function AdicionarLivro({ jaNaLista, busca, setBusca, onAdicionar, desabilitado 
       {busca.trim() && resultados.length === 0 && (
         <p className="lista-add__vazio">
           Nenhum livro encontrado.{' '}
-          <Link to="/livros/novo">Cadastrar um novo livro</Link>
+          <Link href="/livros/novo">Cadastrar um novo livro</Link>
         </p>
       )}
       {resultados.length > 0 && (

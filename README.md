@@ -1,20 +1,19 @@
 # Entre Capítulos — Front-end
 
-Interface web (React + Vite) para a rede social de leitores **Entre Capítulos**.
-Consome a API REST do projeto [`EntreCapitulos`](../EntreCapitulos).
+Interface web (Next.js + React) para a rede social de leitores **Entre Capítulos**.
+
+> **Somente telas.** Não há integração com back-end. Todos os dados vêm de uma
+> base em memória (`src/mock/seed.js`) servida por uma camada falsa
+> (`src/api/resources.js`) com a mesma interface que uma API REST teria.
+> As alterações (resenhas, listas, estante, seguir...) funcionam durante a
+> sessão e são descartadas ao recarregar a página.
 
 ## Stack
 
-- **React 19** + **Vite**
-- **react-router-dom 7** para as rotas
-- `fetch` encapsulado em `src/api/` (sem dependências extras de HTTP)
+- **Next.js 16** (App Router) + **React 19**
+- Rotas por pastas em `src/app/`, navegação com `next/link` e `next/navigation`
+- Fontes otimizadas com `next/font` e títulos por página com `metadata`
 - CSS puro com design tokens em `src/index.css`
-
-## Pré-requisitos
-
-- Node.js 18+
-- A API `EntreCapitulos` rodando em `http://localhost:3000`
-  (com o MongoDB ativo). Veja o README da API.
 
 ## Rodando
 
@@ -23,62 +22,46 @@ npm install
 npm run dev
 ```
 
-O Vite sobe em `http://localhost:5173`. As chamadas para `/api/*` são
-encaminhadas por proxy para o endereço em `VITE_API_URL` (padrão
-`http://localhost:3000`, veja `.env.example`), evitando problemas de CORS em
-desenvolvimento.
+O Next sobe em `http://localhost:3001` (a 3000 fica para a API).
 
-## Funcionalidades
-
-- **Acesso**: cadastro e login (JWT), edição e exclusão da própria conta.
-- **Início**: feed de atividades (leituras, resenhas e listas), com filtro
-  "Seguindo / Todos".
-- **Explorar**: catálogo com busca (título, autor, ISBN, editora, sinopse),
-  "mais bem avaliados", busca de listas e cadastro de livro novo.
-- **Livro**: detalhes, média das resenhas, adicionar/atualizar na estante
-  (status + progresso), escrever/editar/excluir resenha.
-- **Minha Estante**: livros por status (lendo / quero ler / lido / abandonado)
-  com progresso de leitura.
-- **Listas**: criar, editar, excluir; adicionar e remover livros; listas
-  públicas/privadas.
-- **Perfil**: bio, cidade, stats (lidos, seguidores, seguindo, paginômetro),
-  abas de estante/resenhas/listas/atividade; seguir outros leitores.
-
-Cada ação relevante também é registrada em `POST /atividades`.
-
-### Limitações herdadas da API
-
-A API não expõe: listagem/busca de usuários, recuperação de senha, curtidas
-ou comentários, nem campo de gênero nos livros (os filtros de categoria do
-Explorar fazem correspondência por texto).
+Para entrar, use qualquer e-mail/senha (por exemplo `ana@exemplo.com.br`).
+E-mails de exemplo cadastrados: `ana@exemplo.com.br`, `rafael@exemplo.com.br`,
+`marina@exemplo.com.br`. Qualquer outro e-mail cai no usuário padrão (Ana).
 
 ## Scripts
 
 | Comando           | Descrição                        |
 | ----------------- | -------------------------------- |
 | `npm run dev`     | Servidor de desenvolvimento      |
-| `npm run build`   | Build de produção em `dist/`     |
-| `npm run preview` | Pré-visualiza o build            |
+| `npm run build`   | Build de produção (`.next/`)    |
+| `npm run start`   | Serve o build de produção        |
 | `npm run lint`    | Lint com oxlint                  |
 
 ## Estrutura
 
 ```
 src/
-  api/         Cliente HTTP e wrappers dos endpoints da API
+  app/         Rotas do Next (App Router): layouts, páginas e 404
+  api/         Camada de dados falsa (mesma interface de uma API REST)
   components/  Componentes reutilizáveis
-  context/     Contexto de autenticação (token JWT + usuário logado)
+  context/     Contexto de "autenticação" (pseudo-sessão em localStorage)
   hooks/       Hooks de dados (catálogo, estante, listas, feed, perfil...)
   layouts/     Shells de página (área autenticada e telas de acesso)
-  pages/       Telas
+  mock/        Dados de exemplo (seed.js)
+  views/       Telas (componentes cliente usados pelas páginas de app/)
   routes/      Guardas de rota (protegida / pública)
-  utils/       Utilitários (ex.: decode de JWT, formatação)
+  utils/       Utilitários (formatação, decode do pseudo-token)
 ```
 
-## Autenticação
+## Telas
 
-O login (`POST /usuarios/login`) devolve um token JWT que é guardado em
-`localStorage` (`ec_token`). O `AuthContext` decodifica o token para obter o
-id do usuário e carrega seus dados via `GET /usuarios/:id`. Rotas internas
-ficam atrás de `<ProtectedRoute>`. Se a API responder que o token expirou ou
-é inválido, o cliente HTTP dispara o encerramento da sessão automaticamente.
+- **Acesso**: login e cadastro.
+- **Início**: feed de atividades com filtro "Seguindo / Todos".
+- **Explorar**: catálogo com busca, "mais bem avaliados", busca de listas e
+  cadastro de livro.
+- **Livro**: detalhes, média das resenhas, estante (status + progresso),
+  escrever/editar/excluir resenha.
+- **Minha Estante**: livros por status com progresso de leitura.
+- **Listas**: criar, editar, excluir; adicionar e remover livros.
+- **Perfil**: bio, stats, abas de estante/resenhas/listas/atividade; seguir
+  outros leitores; editar e excluir a própria conta.

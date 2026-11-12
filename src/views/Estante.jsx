@@ -1,5 +1,7 @@
+'use client'
+
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useEstanteUsuario } from '../hooks/useEstanteUsuario'
 import { BookCover } from '../components/BookCover'
@@ -24,7 +26,7 @@ function EstanteCard({ registro }) {
 
   return (
     <article className="estante-card">
-      <Link to={livroId ? `/livros/${livroId}` : '#'} className="estante-card__cover">
+      <Link href={livroId ? `/livros/${livroId}` : '#'} className="estante-card__cover">
         <BookCover livro={livro} size="md" />
       </Link>
 
@@ -32,7 +34,7 @@ function EstanteCard({ registro }) {
         <div className="estante-card__topo">
           <div>
             <Link
-              to={livroId ? `/livros/${livroId}` : '#'}
+              href={livroId ? `/livros/${livroId}` : '#'}
               className="estante-card__titulo"
             >
               {livro.titulo}
@@ -149,7 +151,7 @@ export function EstantePage() {
       {!carregando && !erro && daAba.length === 0 && (
         <p className="estante__estado">
           Nenhum livro em “{STATUS.find((s) => s.key === aba)?.rotulo}”.{' '}
-          <Link to="/explorar">Explorar livros</Link>
+          <Link href="/explorar">Explorar livros</Link>
         </p>
       )}
 
